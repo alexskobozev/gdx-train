@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 
 public class Sprite extends Component {
 
-    public Layer layer;
+    public Layer layer = Layer.DEFAULT;
 
     public enum Layer {
         DEFAULT,

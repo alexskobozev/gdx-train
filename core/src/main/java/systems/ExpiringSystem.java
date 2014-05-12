@@ -18,6 +18,8 @@ public class ExpiringSystem extends EntityProcessingSystem {
         super(Aspect.getAspectForAll(Expires.class));
     }
 
+
+
     @Override
     protected boolean checkProcessing() {
         return true;

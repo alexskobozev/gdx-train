@@ -31,7 +31,7 @@ public class SpriteRenderSystem extends EntitySystem {
     private OrthographicCamera camera;
     private SpriteBatch batch;
 
-    private TextureAtlas atlas;
+    private TextureAtlas textureAtlas;
     private HashMap<String, TextureAtlas.AtlasRegion> regions;
     private Bag<TextureAtlas.AtlasRegion> regionsByEntity;
 
@@ -46,17 +46,13 @@ public class SpriteRenderSystem extends EntitySystem {
 
     @Override
     protected void initialize() {
-        batch = new SpriteBatch();
-
-        atlas = new TextureAtlas(Gdx.files.internal("resources/textures/pack.atlas"), Gdx.files.internal("resources/textures"));
         regions = new HashMap<String, TextureAtlas.AtlasRegion>();
-
-        for (TextureAtlas.AtlasRegion r : atlas.getRegions()) {
+        textureAtlas = new TextureAtlas(Gdx.files.internal("resources/textures/pack.atlas"), Gdx.files.internal("resources/textures"));
+        for (TextureAtlas.AtlasRegion r : textureAtlas.getRegions()) {
             regions.put(r.name, r);
         }
-
         regionsByEntity = new Bag<TextureAtlas.AtlasRegion>();
-
+        batch = new SpriteBatch();
         sortedEntities = new ArrayList<Entity>();
     }
 
@@ -103,9 +99,10 @@ public class SpriteRenderSystem extends EntitySystem {
 
             TextureAtlas.AtlasRegion spriteRegion = regionsByEntity.get(entity.getId());
             batch.setColor(sprite.r, sprite.g, sprite.b, sprite.a);
-
-            float posX = position.x - (spriteRegion.getRegionWidth() / 2 * sprite.scaleX);
-            float posY = position.y - (spriteRegion.getRegionHeight() / 2 * sprite.scaleY);
+            float posX = position.x -
+                    (spriteRegion.getRegionWidth() / 2 *
+                            sprite.scaleX);
+            float posY = position.y - (spriteRegion.getRegionHeight() / 2 * sprite.scaleX);
 
             batch.draw(spriteRegion, posX, posY, 0, 0,
                     spriteRegion.getRegionWidth(), spriteRegion.getRegionHeight(),

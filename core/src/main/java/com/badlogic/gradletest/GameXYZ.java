@@ -1,12 +1,16 @@
 package com.badlogic.gradletest;
 
 import com.artemis.World;
+import com.artemis.managers.GroupManager;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
+import systems.CollisionSystem;
+import systems.EntitySpawningTimerSystem;
+import systems.ExpiringSystem;
 import systems.MovementSystem;
 import systems.PlayerInputSystem;
 import systems.SpriteRenderSystem;
@@ -31,6 +35,11 @@ public class GameXYZ implements Screen {
 
         world.setSystem(new PlayerInputSystem(camera));
         world.setSystem(new MovementSystem());
+        world.setSystem(new CollisionSystem());
+        world.setSystem(new ExpiringSystem());
+        world.setSystem(new EntitySpawningTimerSystem());
+
+        world.setManager(new GroupManager());
 
         world.initialize();
 
