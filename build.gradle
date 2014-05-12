@@ -26,7 +26,8 @@ project(":core") {
 
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-        compile "com.roundtriangles.games:gdx-artemis:0.4"
+//        compile "com.roundtriangles.games:gdx-artemis:0.4"
+        compile fileTree(dir: 'libs', include: ['*.jar'])
     }
 }
 

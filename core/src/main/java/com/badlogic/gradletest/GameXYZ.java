@@ -1,13 +1,22 @@
 package com.badlogic.gradletest;
 
+import com.artemis.Entity;
+import com.artemis.World;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
+import components.Position;
+import components.Sprite;
+import systems.SpriteRenderSystem;
+
 public class GameXYZ implements Screen {
 
+    private final Game game;
+    private final World world;
+    private final SpriteRenderSystem spriteRenderSystem;
     OrthographicCamera camera;
 
 
@@ -15,6 +24,18 @@ public class GameXYZ implements Screen {
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 1280, 900);
+
+        this.game = game;
+
+        world = new World();
+        spriteRenderSystem = world.setSystem(new SpriteRenderSystem(camera), true);
+
+        world.initialize();
+
+        Entity e = world.createEntity();
+        e.addComponent(new Position(150, 150));
+        e.addComponent(new Sprite());
+        e.addToWorld();
 
     }
 
@@ -25,6 +46,10 @@ public class GameXYZ implements Screen {
         Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 
         camera.update();
+
+        world.setDelta(delta);
+        world.process();
+        spriteRenderSystem.process();
 
     }
 
