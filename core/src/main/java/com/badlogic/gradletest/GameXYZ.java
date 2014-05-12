@@ -1,6 +1,5 @@
 package com.badlogic.gradletest;
 
-import com.artemis.Entity;
 import com.artemis.World;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -8,8 +7,8 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
-import components.Position;
-import components.Sprite;
+import systems.MovementSystem;
+import systems.PlayerInputSystem;
 import systems.SpriteRenderSystem;
 
 public class GameXYZ implements Screen {
@@ -30,13 +29,12 @@ public class GameXYZ implements Screen {
         world = new World();
         spriteRenderSystem = world.setSystem(new SpriteRenderSystem(camera), true);
 
+        world.setSystem(new PlayerInputSystem(camera));
+        world.setSystem(new MovementSystem());
+
         world.initialize();
 
-        Entity e = world.createEntity();
-        e.addComponent(new Position(150, 150));
-        e.addComponent(new Sprite());
-        e.addToWorld();
-
+        EntityFactory.createPlayer(world, 150, 150).addToWorld();
     }
 
     @Override

@@ -33,9 +33,6 @@ public class SpriteRenderSystem extends EntitySystem {
         batch = new SpriteBatch();
     }
 
-    public SpriteRenderSystem(Aspect aspect) {
-        super(aspect);
-    }
 
     @Override
     protected void processEntities(ImmutableBag<Entity> entityImmutableBag) {
