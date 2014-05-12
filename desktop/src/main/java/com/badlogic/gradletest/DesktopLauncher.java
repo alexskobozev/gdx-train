@@ -17,7 +17,7 @@ public class DesktopLauncher extends Game {
         config.height = FRAME_HEIGHT;
         config.useGL20 = true;
         config.title = "GameXYZ";
-        new LwjglApplication(new Launcher(), config);
+        new LwjglApplication(new DesktopLauncher(), config);
     }
 
     @Override
