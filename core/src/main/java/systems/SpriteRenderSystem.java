@@ -5,9 +5,18 @@ import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.artemis.EntitySystem;
 import com.artemis.annotations.Mapper;
+import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
 
 import components.Position;
 import components.Sprite;
@@ -22,6 +31,13 @@ public class SpriteRenderSystem extends EntitySystem {
     private OrthographicCamera camera;
     private SpriteBatch batch;
 
+    private TextureAtlas atlas;
+    private HashMap<String, TextureAtlas.AtlasRegion> regions;
+    private Bag<TextureAtlas.AtlasRegion> regionsByEntity;
+
+    private List<Entity> sortedEntities;
+
+
     @SuppressWarnings("unchecked")
     public SpriteRenderSystem(OrthographicCamera camera) {
         super(Aspect.getAspectForAll(Position.class, Sprite.class));
@@ -31,13 +47,24 @@ public class SpriteRenderSystem extends EntitySystem {
     @Override
     protected void initialize() {
         batch = new SpriteBatch();
+
+        atlas = new TextureAtlas(Gdx.files.internal("resources/textures/pack.atlas"), Gdx.files.internal("resources/textures"));
+        regions = new HashMap<String, TextureAtlas.AtlasRegion>();
+
+        for (TextureAtlas.AtlasRegion r : atlas.getRegions()) {
+            regions.put(r.name, r);
+        }
+
+        regionsByEntity = new Bag<TextureAtlas.AtlasRegion>();
+
+        sortedEntities = new ArrayList<Entity>();
     }
 
 
     @Override
     protected void processEntities(ImmutableBag<Entity> entityImmutableBag) {
-        for (int i = 0; i < entityImmutableBag.size(); i++) {
-            process(entityImmutableBag.get(i));
+        for (Entity e : sortedEntities) {
+            process(e);
         }
     }
 
@@ -47,15 +74,43 @@ public class SpriteRenderSystem extends EntitySystem {
         batch.begin();
     }
 
+    @Override
+    protected void inserted(Entity e) {
+        Sprite sprite = sm.get(e);
+        regionsByEntity.set(e.getId(), regions.get(sprite.name));
+
+        sortedEntities.add(e);
+
+        Collections.sort(sortedEntities, new Comparator<Entity>() {
+            @Override
+            public int compare(Entity o1, Entity o2) {
+                Sprite s1 = sm.get(o1);
+                Sprite s2 = sm.get(o2);
+                return s1.layer.compareTo(s2.layer);
+            }
+        });
+    }
+
+    @Override
+    protected void removed(Entity e) {
+        regionsByEntity.set(e.getId(), null);
+    }
+
     private void process(Entity entity) {
         if (pm.has(entity)) {
             Position position = pm.getSafe(entity);
-            Sprite sprite = sm.getSafe(entity);
-            batch.setColor(sprite.r, sprite.g, sprite.b, sprite.a);
-            float posX = position.x;
-            float posY = position.y;
+            Sprite sprite = sm.get(entity);
 
-            batch.draw(sprite.sprite, posX, posY);
+            TextureAtlas.AtlasRegion spriteRegion = regionsByEntity.get(entity.getId());
+            batch.setColor(sprite.r, sprite.g, sprite.b, sprite.a);
+
+            float posX = position.x - (spriteRegion.getRegionWidth() / 2 * sprite.scaleX);
+            float posY = position.y - (spriteRegion.getRegionHeight() / 2 * sprite.scaleY);
+
+            batch.draw(spriteRegion, posX, posY, 0, 0,
+                    spriteRegion.getRegionWidth(), spriteRegion.getRegionHeight(),
+                    sprite.scaleX, sprite.scaleY, sprite.rotation
+            );
         }
     }
 

@@ -1,10 +1,25 @@
 package components;
 
 import com.artemis.Component;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 
 public class Sprite extends Component {
+
+    public Layer layer;
+
+    public enum Layer {
+        DEFAULT,
+        BACKGROUND,
+        ACTORS_1,
+        ACTORS_2,
+        ACTORS_3,
+        PARTICLES;
+
+        public int getLayerId() {
+            return ordinal();
+        }
+    }
+
 
     public float r = 1;
     public float g = 1;
@@ -15,9 +30,15 @@ public class Sprite extends Component {
     public float rotation;
 
     public Texture sprite;
+    public String name;
 
-    public Sprite(String path) {
-        sprite = new Texture(Gdx.files.internal(path));
+    public Sprite(String name, Layer layer) {
+        this.name = name;
+        this.layer = layer;
+    }
+
+    public Sprite(String name) {
+        this("default",Layer.DEFAULT);
 
     }
 
