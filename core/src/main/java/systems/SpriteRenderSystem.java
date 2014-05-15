@@ -90,6 +90,7 @@ public class SpriteRenderSystem extends EntitySystem {
     @Override
     protected void removed(Entity e) {
         regionsByEntity.set(e.getId(), null);
+        sortedEntities.remove(e);
     }
 
     private void process(Entity entity) {

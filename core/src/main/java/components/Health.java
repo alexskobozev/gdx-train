@@ -5,9 +5,9 @@ import com.artemis.Component;
 public class Health extends Component {
 
     public float health;
-    public final float maxHealth;
+    public float maxHealth;
 
-    public Health(float health, float maxHealth){
+    public Health(float health, float maxHealth) {
         this.health = health;
         this.maxHealth = maxHealth;
     }
