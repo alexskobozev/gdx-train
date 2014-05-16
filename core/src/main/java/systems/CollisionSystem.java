@@ -10,6 +10,7 @@ import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
 import com.artemis.utils.Utils;
 import com.badlogic.gradletest.Constants;
+import com.badlogic.gradletest.EntityFactory;
 
 import components.Bounds;
 import components.Health;
@@ -41,16 +42,16 @@ public class CollisionSystem extends EntitySystem {
 
             @Override
             public void handleCollision(Entity bullet, Entity ship) {
-
-
                 Health health = hm.get(ship);
+                Position bp = pm.get(bullet);
                 health.health -= 10;
-                bullet.deleteFromWorld();
-
+                EntityFactory.createExplosion(world, bp.x, bp.y, 0.1f).addToWorld();
+                for (int i = 0; i < 50; i++)
+                    EntityFactory.createParticle(world, bp.x, bp.y).addToWorld();
                 if (health.health <= 0) {
-                    ship.deleteFromWorld();
+                    EntityFactory.createExplosion(world, bp.x, bp.y, 0.5f).addToWorld();
                 }
-
+                bullet.deleteFromWorld();
             }
         }
         ));
@@ -103,7 +104,7 @@ public class CollisionSystem extends EntitySystem {
 
             Bounds b1 = bm.get(entity1);
             Bounds b2 = bm.get(entity2);
-           // return Utils.distance(p1.x, p1.y, p2.x, p2.y) - b1.radius < b2.radius;
+            // return Utils.distance(p1.x, p1.y, p2.x, p2.y) - b1.radius < b2.radius;
             return Utils.doCirclesCollide(p1.x, p1.y, b1.radius, p2.x, p2.y, b2.radius);
         }
     }

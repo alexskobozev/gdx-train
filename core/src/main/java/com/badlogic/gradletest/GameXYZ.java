@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
 import systems.CollisionSystem;
+import systems.ColorAnimationSystem;
 import systems.EntitySpawningTimerSystem;
 import systems.ExpiringSystem;
 import systems.MovementSystem;
@@ -38,6 +39,7 @@ public class GameXYZ implements Screen {
         world.setSystem(new CollisionSystem());
         world.setSystem(new ExpiringSystem());
         world.setSystem(new EntitySpawningTimerSystem());
+        world.setSystem(new ColorAnimationSystem());
 
         world.setManager(new GroupManager());
 

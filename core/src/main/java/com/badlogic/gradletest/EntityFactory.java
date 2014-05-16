@@ -6,10 +6,12 @@ import com.artemis.managers.GroupManager;
 import com.badlogic.gdx.math.MathUtils;
 
 import components.Bounds;
+import components.ColorAnimation;
 import components.Expires;
 import components.Health;
 import components.Player;
 import components.Position;
+import components.ScaleAnimation;
 import components.Sprite;
 import components.Velocity;
 
@@ -141,7 +143,48 @@ public class EntityFactory {
         expires.delay = 1;
         e.addComponent(expires);
 
+        ColorAnimation colorAnimation = new ColorAnimation();
+        colorAnimation.alphaAnimate = true;
+        colorAnimation.alphaSpeed = -1f;
+        colorAnimation.alphaMin = 0f;
+        colorAnimation.alphaMax = 1f;
+        colorAnimation.repeat = false;
+        e.addComponent(colorAnimation);
+
         return e;
     }
 
+    public static Entity createExplosion(World world, float x, float y, float scale) {
+        Entity e = world.createEntity();
+
+        Position position = new Position();
+        position.x = x;
+        position.y = y;
+        e.addComponent(position);
+
+        Sprite sprite = new Sprite();
+        sprite.name = "explosion";
+        sprite.scaleX = sprite.scaleY = scale;
+        sprite.r = 1;
+        sprite.g = 216/255f;
+        sprite.b = 0;
+        sprite.a = 0.5f;
+        sprite.layer = Sprite.Layer.PARTICLES;
+        e.addComponent(sprite);
+
+        Expires expires = new Expires();
+        expires.delay = 0.5f;
+        e.addComponent(expires);
+
+
+        ScaleAnimation scaleAnimation = new ScaleAnimation();
+        scaleAnimation.active = true;
+        scaleAnimation.max = scale;
+        scaleAnimation.min = scale/100f;
+        scaleAnimation.speed = -3.0f;
+        scaleAnimation.repeat = false;
+        e.addComponent(scaleAnimation);
+
+        return e;
+    }
 }
