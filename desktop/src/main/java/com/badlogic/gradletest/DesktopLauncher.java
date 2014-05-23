@@ -7,7 +7,7 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
 import utils.ImagePacker;
 
-public class DesktopLauncher extends Game {
+public class DesktopLauncher {
 
     public static final int FRAME_WIDTH = 1280;
     public static final int FRAME_HEIGHT = 900;
@@ -19,12 +19,11 @@ public class DesktopLauncher extends Game {
         config.height = FRAME_HEIGHT;
         config.useGL20 = true;
         config.title = "GameXYZ";
+        config.vSyncEnabled = false;
+        config.resizable=false;
+
         ImagePacker.run();
-        new LwjglApplication(new DesktopLauncher(), config);
+        new LwjglApplication(new GameXYZ(FRAME_WIDTH,FRAME_HEIGHT), config);
     }
 
-    @Override
-    public void create() {
-        setScreen(new GameXYZ(this));
-    }
 }

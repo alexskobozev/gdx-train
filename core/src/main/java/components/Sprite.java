@@ -2,10 +2,11 @@ package components;
 
 import com.artemis.Component;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
+import javax.xml.soap.Text;
 
 public class Sprite extends Component {
-
-    public Layer layer = Layer.DEFAULT;
 
     public enum Layer {
         DEFAULT,
@@ -21,28 +22,25 @@ public class Sprite extends Component {
     }
 
 
-    public float r = 1;
-    public float g = 1;
-    public float b = 1;
-    public float a = 1;
-    public float scaleX = 1;
-    public float scaleY = 1;
-    public float rotation;
+    public float r, g, b, a, scaleX, scaleY, rotation;
+    public int x, y, width, height;
+    public TextureRegion region;
+    public Layer layer;
+    public int index;
 
-    public Texture sprite;
     public String name;
 
-    public Sprite(String name, Layer layer) {
-        this.name = name;
-        this.layer = layer;
-    }
 
     public Sprite(String name) {
-        this("default",Layer.DEFAULT);
-
+        this.name = name;
+        this.r = 1f;
+        this.g = 1f;
+        this.a = 1f;
+        this.b = 1f;
+        this.scaleX = 1f;
+        this.scaleY = 1f;
+        this.rotation = 0f;
+        index = 0;
     }
 
-    public Sprite() {
-        this("textures-original/fighter.png");
-    }
 }

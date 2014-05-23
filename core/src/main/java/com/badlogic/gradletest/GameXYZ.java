@@ -1,94 +1,41 @@
 package com.badlogic.gradletest;
 
 import com.artemis.World;
-import com.artemis.managers.GroupManager;
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import systems.CollisionSystem;
 import systems.ColorAnimationSystem;
-import systems.EntitySpawningTimerSystem;
 import systems.ExpiringSystem;
-import systems.MovementSystem;
-import systems.PlayerInputSystem;
-import systems.SpriteRenderSystem;
+import systems.ScaleAnimationSystem;
+import systems.SpriteAnimationSystem;
 
-public class GameXYZ implements Screen {
+public class GameXYZ extends Game {
 
-    private final Game game;
-    private final World world;
-    private final SpriteRenderSystem spriteRenderSystem;
-    OrthographicCamera camera;
+    public int windowWidth;
+    public int windowHeight;
 
+    public World world;
+    public SpriteBatch spriteBatch;
 
-    public GameXYZ(Game game) {
+    public GameXYZ(int windowWidth, int windowHeight) {
+        this.windowWidth = windowWidth;
+        this.windowHeight = windowHeight;
+    }
 
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false, 1280, 900);
-
-        this.game = game;
+    @Override
+    public void create() {
 
         world = new World();
-        spriteRenderSystem = world.setSystem(new SpriteRenderSystem(camera), true);
+        spriteBatch = new SpriteBatch();
 
-        world.setSystem(new PlayerInputSystem(camera));
-        world.setSystem(new MovementSystem());
-        world.setSystem(new CollisionSystem());
+        world.setSystem(new SpriteAnimationSystem());
+        world.setSystem(new ScaleAnimationSystem());
         world.setSystem(new ExpiringSystem());
-        world.setSystem(new EntitySpawningTimerSystem());
         world.setSystem(new ColorAnimationSystem());
-
-        world.setManager(new GroupManager());
-
         world.initialize();
 
-        EntityFactory.createPlayer(world, 150, 150).addToWorld();
+        setScreen(new OverworldScreen);
     }
 
-    @Override
-    public void render(float delta) {
 
-        Gdx.gl.glClearColor(0, 0, 0.2f, 1);
-        Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-
-        camera.update();
-
-        world.setDelta(delta);
-        world.process();
-        spriteRenderSystem.process();
-
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        System.out.println("Resize");
-    }
-
-    @Override
-    public void show() {
-        System.out.println("Show");
-    }
-
-    @Override
-    public void hide() {
-        System.out.println("Hide");
-    }
-
-    @Override
-    public void pause() {
-        System.out.println("Pause");
-    }
-
-    @Override
-    public void resume() {
-        System.out.println("Resume");
-    }
-
-    @Override
-    public void dispose() {
-        System.out.println("Dispose");
-    }
 }
